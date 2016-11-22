@@ -19,7 +19,7 @@ module.exports = function(app, fs, Food)
     });
 
     app.get('/api/foods/author/:author', function(req, res){
-        Food.find({author: req.params.author}, {_id:0, title: 1, published_date: 1}, function(err, foods){
+        Food.find({author: req.params.author}, {_id:0, label: 1, published_date: 1}, function(err, foods){
             if(err)
                 return res.status(500).json({error: err});
             if(foods.length === 0)
@@ -30,7 +30,9 @@ module.exports = function(app, fs, Food)
 
     app.post('/api/foods', function(req, res){
         var food = new Food();
-        food.title = req.body.title;
+        food.label = req.body.label;
+        food.logo = req.body.logo;
+        food.text = req.body.text;
         food.author = req.body.author;
         food.published_date = new Date(req.body.published_date);
 
@@ -50,7 +52,9 @@ module.exports = function(app, fs, Food)
             if(err) return res.status(500).json({error: 'databs failure'});
             if(!food) return res.status(404).json({error: 'food not found'});
 
-            if(req.body.title) food.title = req.body.title;
+            if(req.body.label) food.label = req.body.label;
+            if(req.body.logo) food.logo = req.body.logo;
+            if(req.body.text) food.text = req.body.text;
             if(req.body.author) food.author = req.body.author;
             if(req.body.published_date) food.published_date = req.body.pubhlished_date;
 
@@ -70,8 +74,6 @@ module.exports = function(app, fs, Food)
             if(!output.result.n) return res.status(404).json({ error: "food not found" });
             res.json({ message: "food deleted" });
             */
-
-
             res.status(204).end();
         });
     });

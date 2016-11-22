@@ -8,28 +8,29 @@
         keyFilename: '/Users/cdsn/nodejs/apikey/Tutorial Project-b63b0ae4ec5b.json'
     });
 
-    visionClient.detectLabels('./sample_images/00000001.png', function(err, labels){
+    visionClient.detectLabels('./images/00000001.png', function(err, labels){
         if (err) {
           return console.log(err);
         }
-        console.log('result:', JSON.stringify(labels, null, 2));
+        console.log('label:', JSON.stringify(labels, null, 2));
+        console.log(json(labels))
     });
 
-    visionClient.detectLogos('./sample_images/00000001.png', function(err, logos){
+    visionClient.detectLogos('./images/00000001.png', function(err, logos){
         if(err)
         {
             return cosole.log(err);
         }
-        console.log('result:', JSON.stringify(logos, null, 2));
+        console.log('logo:', JSON.stringify(logos, null, 2));
     });
 
 
-    visionClient.detectText('./sample_images/00000001.png', function(err, text){
+    visionClient.detectText('./images/00000001.png', function(err, text){
         if(err)
         {
             return console.log(err);
         }
-        console.log('result:', JSON.stringify(text, null, 2));
+        console.log('text:', JSON.stringify(text, null, 2));
     });
 
 //};
