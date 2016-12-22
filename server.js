@@ -19,16 +19,22 @@ app.engine('html', require('ejs').renderFile);
 
 //server creation, server is listening on port 3000.
 var server = app.listen(port, function(){
-    console.log("Server is listening on port 3000");
+    console.log("Server is listening on port 8080");
 });
 
 //static file in public directory.
 app.use(express.static('public'));
 
-var Vision = require('./vision')(fs);
+var Vision = require('@google-cloud/vision');
+
+var visionClient = Vision({
+    projectId: 'hazel-phoenix-150108',
+    keyFilename: '/Users/cdsn/nodejs/apikey/Tutorial Project-b63b0ae4ec5b.json'
+});
+
 var Food = require('./models/food');
 
-var router = require('./routes')(app, fs, Food); // import main.js as a moudle (we already exported main.js as a new module.)
+var router = require('./routes')(app, fs, Food, visionClient); // import main.js as a moudle (we already exported main.js as a new module.)
 
 var db = mongoose.connection;
 db.on('error', console.error);

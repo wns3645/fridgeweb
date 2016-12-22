@@ -1,6 +1,13 @@
 
-module.exports = function(app, fs, Food)
+module.exports = function(app, fs, Food, visionClient)
 {
+    app.get('/', function(req,res){
+        res.render('index', {
+            title: "ejs test",
+            length: 5
+        });
+    });
+
     app.get('/api/foods', function(req, res){
         Food.find(function(err, foods){
             if(err) return res.status(500).send({error: 'databse failure'});
@@ -47,6 +54,20 @@ module.exports = function(app, fs, Food)
         });
     });
 
+    app.post('/api/foods/enroll', function(req, res){
+        var food = new Food();
+
+        visionClient.detectLabels(req.body.file_name, function(err, labels){
+            if (err) {
+              return console.log(err);
+            }
+            res.json(labels);
+            console.log(req.body.file_name);
+            console.log('"label":', JSON.stringify(labels, null, 2));
+        });
+
+    });
+
     app.put('/api/foods/:food_id', function(req, res){
         Food.findById(req.params.food_id, function(err, food){
             if(err) return res.status(500).json({error: 'databs failure'});
@@ -69,11 +90,11 @@ module.exports = function(app, fs, Food)
         Food.remove({_id: req.params.food_id}, function(err, output){
             if(err) return res.status(500).json({error: "database failure"});
 
-
             /* ( SINCE DELETE OPERATION IS IDEMPOTENT, NO NEED TO SPECIFY )
             if(!output.result.n) return res.status(404).json({ error: "food not found" });
             res.json({ message: "food deleted" });
             */
+
             res.status(204).end();
         });
     });
