@@ -6,7 +6,7 @@ var foodSchema = new Schema({
     label: Array,
     logo: Array,
     text: Array,
-    published_date: { type: Date, default: Date.now },
+    date: { type: Date, default: Date.now },
     author: String
 });
 

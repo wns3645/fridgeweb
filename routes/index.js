@@ -3,7 +3,7 @@ module.exports = function(app, fs, Food, visionClient)
 {
     app.get('/', function(req,res){
         res.render('index', {
-            title: "ejs test",
+            title: "Test..!",
             length: 5
         });
     });
@@ -41,7 +41,7 @@ module.exports = function(app, fs, Food, visionClient)
         food.logo = req.body.logo;
         food.text = req.body.text;
         food.author = req.body.author;
-        food.published_date = new Date(req.body.published_date);
+        food.date = new Date(req.body.date);
 
         food.save(function(err){
             if(err){
@@ -61,10 +61,31 @@ module.exports = function(app, fs, Food, visionClient)
             if (err) {
               return console.log(err);
             }
-            res.json(labels);
-            console.log(req.body.file_name);
-            console.log('"label":', JSON.stringify(labels, null, 2));
+            console.log("uwwwwaaaaa")
+            food.label = labels;
         });
+
+        console.log(visionClient.detectLabels(req.body.file_name));
+
+        visionClient.detectLogos(req.body.file_name, function(err, logos){
+            if(err)
+            {
+                return cosole.log(err);
+            }
+            food.logo = logos;
+        });
+
+        visionClient.detectText(req.body.file_name, function(err, text){
+            if(err)
+            {
+                return console.log(err);
+            }
+            food.text = text;
+        });
+
+        console.log(JSON.stringify(food, null, 2));
+        res.json({result: 1});
+
 
     });
 
