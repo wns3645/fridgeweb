@@ -7,7 +7,7 @@ var foodSchema = new Schema({
     logo: Array,
     text: Array,
     date: { type: Date, default: Date.now },
-    author: String
+    author: { type: String, default: "Junhui" }
 });
 
 module.exports = mongoose.model('food', foodSchema);

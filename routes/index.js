@@ -35,57 +35,61 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
+    // app.post('/api/foods', function(req, res){
+    //     var food = new Food();
+    //     food.label = req.body.label;
+    //     food.logo = req.body.logo;
+    //     food.text = req.body.text;
+    //     food.author = req.body.author;
+    //     food.date = new Date(req.body.date);
+    //
+    //     food.save(function(err){
+    //         if(err){
+    //             console.error(err);
+    //             res.json({result: 0});
+    //             return;
+    //         }
+    //
+    //         res.json({result: 1});
+    //     });
+    // });
+
     app.post('/api/foods', function(req, res){
-        var food = new Food();
-        food.label = req.body.label;
-        food.logo = req.body.logo;
-        food.text = req.body.text;
-        food.author = req.body.author;
-        food.date = new Date(req.body.date);
-
-        food.save(function(err){
-            if(err){
-                console.error(err);
-                res.json({result: 0});
-                return;
-            }
-
-            res.json({result: 1});
-        });
-    });
-
-    app.post('/api/foods/enroll', function(req, res){
         var food = new Food();
 
         visionClient.detectLabels(req.body.file_name, function(err, labels){
             if (err) {
               return console.log(err);
             }
-            console.log("uwwwwaaaaa")
             food.label = labels;
+
+            visionClient.detectLogos(req.body.file_name, function(err, logos){
+                if(err)
+                {
+                    return cosole.log(err);
+                }
+                food.logo = logos;
+
+                visionClient.detectText(req.body.file_name, function(err, text){
+                    if(err)
+                    {
+                        return console.log(err);
+                    }
+                    food.text = text;
+
+                    food.save(function(err){
+                        if(err){
+                            console.error(err);
+                            res.json({result: 0});
+                            return;
+                        }
+
+                        console.log(JSON.stringify(food, null, 2));
+                        res.json({result: 1});
+                    });
+                });
+            });
         });
-
-        console.log(visionClient.detectLabels(req.body.file_name));
-
-        visionClient.detectLogos(req.body.file_name, function(err, logos){
-            if(err)
-            {
-                return cosole.log(err);
-            }
-            food.logo = logos;
-        });
-
-        visionClient.detectText(req.body.file_name, function(err, text){
-            if(err)
-            {
-                return console.log(err);
-            }
-            food.text = text;
-        });
-
-        console.log(JSON.stringify(food, null, 2));
-        res.json({result: 1});
-
 
     });
 

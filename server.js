@@ -17,7 +17,7 @@ app.set('views', __dirname+'/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-//server creation, server is listening on port 3000.
+//server creation, server is listening on port 8080.
 var server = app.listen(port, function(){
     console.log("Server is listening on port 8080");
 });
@@ -46,5 +46,5 @@ mongoose.Promise = global.Promise;
 
 
 //create connection!
-mongoose.connect('mongodb://localhost/mongodb_tutorial');
+mongoose.connect('mongodb://localhost/test');
 //mongoose.connect('mongodb://username:password@host:port/databse?options...');
