@@ -35,25 +35,6 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
-    // app.post('/api/foods', function(req, res){
-    //     var food = new Food();
-    //     food.label = req.body.label;
-    //     food.logo = req.body.logo;
-    //     food.text = req.body.text;
-    //     food.author = req.body.author;
-    //     food.date = new Date(req.body.date);
-    //
-    //     food.save(function(err){
-    //         if(err){
-    //             console.error(err);
-    //             res.json({result: 0});
-    //             return;
-    //         }
-    //
-    //         res.json({result: 1});
-    //     });
-    // });
-
     app.post('/api/foods', function(req, res){
         var food = new Food();
 
@@ -77,6 +58,8 @@ module.exports = function(app, fs, Food, visionClient)
                     }
                     food.text = text;
 
+                    food.position = req.body.position;
+                    
                     food.save(function(err){
                         if(err){
                             console.error(err);
