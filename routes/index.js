@@ -25,10 +25,24 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
-    app.get('/api/foods/author/:author', function(req, res){
-        Food.find({author: req.params.author}, {_id:0, label: 1, published_date: 1}, function(err, foods){
+    app.get('/api/foods/label/:label', function(req, res){
+        var query = Food.find({label: req.params.label}, {_id:1, label: 1, date: 1, position: 1});
+        query.exec(function(err, foods){
             if(err)
                 return res.status(500).json({error: err});
+
+            if(foods.length === 0)
+                return res.status(404).json({error: 'food not found'});
+            res.json(foods);
+        });
+    });
+
+    app.get('/api/foods/:position', function(req, res){
+        var query = Food.find({position: req.params.position}, {_id:1, label: 1, logo: 1, date: 1, position: 1});
+        query.exec(function(err, foods){
+            if(err)
+                return res.status(500).json({error: err});
+
             if(foods.length === 0)
                 return res.status(404).json({error: 'food not found'});
             res.json(foods);
@@ -59,7 +73,7 @@ module.exports = function(app, fs, Food, visionClient)
                     food.text = text;
 
                     food.position = req.body.position;
-                    
+
                     food.save(function(err){
                         if(err){
                             console.error(err);
@@ -78,14 +92,13 @@ module.exports = function(app, fs, Food, visionClient)
 
     app.put('/api/foods/:food_id', function(req, res){
         Food.findById(req.params.food_id, function(err, food){
-            if(err) return res.status(500).json({error: 'databs failure'});
+            if(err) return res.status(500).json({error: 'database failure'});
             if(!food) return res.status(404).json({error: 'food not found'});
 
             if(req.body.label) food.label = req.body.label;
             if(req.body.logo) food.logo = req.body.logo;
             if(req.body.text) food.text = req.body.text;
-            if(req.body.author) food.author = req.body.author;
-            if(req.body.published_date) food.published_date = req.body.pubhlished_date;
+            if(req.body.position) food.position = req.body.position;
 
             food.save(function(err){
                 if(err) res.status(500).json({error: 'failed to update'});
@@ -102,6 +115,14 @@ module.exports = function(app, fs, Food, visionClient)
             if(!output.result.n) return res.status(404).json({ error: "food not found" });
             res.json({ message: "food deleted" });
             */
+
+            res.status(204).end();
+        });
+    });
+
+    app.delete('api/foods/:food_position', function(req, res){
+        Food.remove({position: req.params.food_position}, function(err, output){
+            if(err) return res.status(500).json({error: "database failure"});
 
             res.status(204).end();
         });

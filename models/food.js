@@ -8,7 +8,7 @@ var foodSchema = new Schema({
     text: Array,
     position: { type: Number, default: -1},
     date: { type: Date, default: Date.now },
-    author: { type: String, default: "Junhui" }
+    user: { type: String, default: "Junhui" }
 });
 
 module.exports = mongoose.model('food', foodSchema);
