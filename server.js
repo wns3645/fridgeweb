@@ -29,7 +29,7 @@ var Vision = require('@google-cloud/vision');
 
 var visionClient = Vision({
     projectId: 'hazel-phoenix-150108',
-    keyFilename: '/Users/cdsn/nodejs/apikey/Tutorial Project-b63b0ae4ec5b.json'
+    keyFilename: __dirname+'/apikey/Tutorial Project-b63b0ae4ec5b.json'
 });
 
 var Food = require('./models/food');
