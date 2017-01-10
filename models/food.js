@@ -8,6 +8,7 @@ var foodSchema = new Schema({
     text: Array,
     position: { type: Number, default: -1},
     date: { type: Date, default: Date.now },
+    file_name: String,
     user: { type: String, default: "Junhui" }
 });
 

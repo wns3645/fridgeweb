@@ -3,7 +3,7 @@ module.exports = function(app, fs, Food, visionClient)
 {
     app.get('/', function(req,res){
         res.render('index', {
-            title: "Test..!",
+            title: "Fridge!",
             length: 5
         });
     });
@@ -37,7 +37,7 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
-    app.get('/api/foods/:position', function(req, res){
+    app.get('/api/foods/position/:position', function(req, res){
         var query = Food.find({position: req.params.position}, {_id:1, label: 1, logo: 1, date: 1, position: 1});
         query.exec(function(err, foods){
             if(err)
@@ -51,21 +51,22 @@ module.exports = function(app, fs, Food, visionClient)
 
     app.post('/api/foods', function(req, res){
         var food = new Food();
+        var file_name = './images/' + req.body.file_name;
 
-        visionClient.detectLabels(req.body.file_name, function(err, labels){
+        visionClient.detectLabels(file_name, function(err, labels){
             if (err) {
               return console.log(err);
             }
             food.label = labels;
 
-            visionClient.detectLogos(req.body.file_name, function(err, logos){
+            visionClient.detectLogos(file_name, function(err, logos){
                 if(err)
                 {
                     return cosole.log(err);
                 }
                 food.logo = logos;
 
-                visionClient.detectText(req.body.file_name, function(err, text){
+                visionClient.detectText(file_name, function(err, text){
                     if(err)
                     {
                         return console.log(err);
@@ -73,6 +74,7 @@ module.exports = function(app, fs, Food, visionClient)
                     food.text = text;
 
                     food.position = req.body.position;
+                    food.file_name = req.body.file_name;
 
                     food.save(function(err){
                         if(err){
@@ -81,7 +83,7 @@ module.exports = function(app, fs, Food, visionClient)
                             return;
                         }
 
-                        console.log(JSON.stringify(food, null, 2));
+                        //console.log(JSON.stringify(food, null, 2));
                         res.json({result: 1});
                     });
                 });
@@ -107,6 +109,20 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
+    app.put('/api/foods/position/:position', function(req, res){
+        Food.findOne({position: req.params.position}, function(err, food){
+            if(err) return res.status(500).json({error: 'database failure'});
+            if(!food) return res.status(404).json({error: 'food not found'});
+
+            if(req.body.position) food.position = req.body.position;
+
+            food.save(function(err){
+                if(err) res.status(500).json({error: 'failed to update'});
+                res.json({message: 'food updated'});
+            });
+        });
+    });
+
     app.delete('/api/foods/:food_id', function(req, res){
         Food.remove({_id: req.params.food_id}, function(err, output){
             if(err) return res.status(500).json({error: "database failure"});
@@ -120,8 +136,8 @@ module.exports = function(app, fs, Food, visionClient)
         });
     });
 
-    app.delete('api/foods/:food_position', function(req, res){
-        Food.remove({position: req.params.food_position}, function(err, output){
+    app.delete('/api/foods/position/:position', function(req, res){
+        Food.remove({position: req.params.position}, function(err, output){
             if(err) return res.status(500).json({error: "database failure"});
 
             res.status(204).end();
