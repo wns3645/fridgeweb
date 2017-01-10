@@ -71,7 +71,7 @@ module.exports = function(app, fs, Food, visionClient)
                     {
                         return console.log(err);
                     }
-                    food.text = text;
+                    //food.text = text;
 
                     food.position = req.body.position;
                     food.file_name = req.body.file_name;
@@ -99,7 +99,7 @@ module.exports = function(app, fs, Food, visionClient)
 
             if(req.body.label) food.label = req.body.label;
             if(req.body.logo) food.logo = req.body.logo;
-            if(req.body.text) food.text = req.body.text;
+            //if(req.body.text) food.text = req.body.text;
             if(req.body.position) food.position = req.body.position;
 
             food.save(function(err){
