@@ -2,10 +2,29 @@
 module.exports = function(app, fs, Food, visionClient)
 {
     app.get('/', function(req,res){
-        res.render('index', {
-            title: "Fridge!",
-            length: 5
+        res.render('index.html', {
+            // title: "Fridge!",
+            // length: 5
         });
+    });
+
+    app.get('/index.html', function(req,res){
+        res.render('index.html', {
+            // title: "Fridge!",
+            // length: 5
+        });
+    });
+
+    app.get('/all.html', function(req, res){
+        res.render('all.html');
+    });
+
+    app.get('/drink.html', function(req, res){
+        res.render('drink.html');
+    });
+
+    app.get('/fruit.html', function(req, res){
+        res.render('fruit.html');
     });
 
     app.get('/api/foods', function(req, res){
